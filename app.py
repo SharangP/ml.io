@@ -2,6 +2,7 @@ import os
 import sys
 import datetime
 import json
+import uuid
 
 from flask import Flask, render_template, redirect, jsonify, url_for, request, Response
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -27,6 +28,8 @@ app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 app.config['SECURITY_LOGIN_USER_TEMPLATE'] = 'login.html'
 app.config['SECURITY_LOGIN_URL'] = '/login'
 app.config['SECURITY_CHANGEABLE'] = True
+
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
 # Fake emails for now
 class FakeMail(object):
@@ -82,9 +85,18 @@ def user_registered_sighandler(app, user, confirm_token):
 @app.route('/')
 def index():
   if not current_user.is_authenticated():
-    return render_template('index.html')
+    context = { 'classifier': 'Linear Regression' }
+    return render_template('index.html', ctx=context)
   else:
     return redirect('/dashboard')
+
+@app.route('/submit', methods=['POST'])
+def submit():
+  datafile = request.files['datafile']
+  if datafile:
+    filename = str(uuid.uuid4())
+    datafile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  return redirect('/')
 
 @app.route('/register', methods=['GET'])
 def register():
