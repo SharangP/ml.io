@@ -96,7 +96,21 @@ def submit():
   if datafile:
     filename = str(uuid.uuid4())
     datafile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return redirect('/results/%s' % filename)
   return redirect('/')
+
+@app.route('/results/<uuid>')
+def results(uuid):
+  context = { 'uuid': uuid, 'pending': True }
+  return render_template('results.html', ctx=context)
+
+@app.route('/files/<uuid>')
+def files(uuid):
+  filepath = os.path.join(app.config['UPLOAD_FOLDER'], uuid)
+  if os.path.exists(filepath):
+    return file(filepath).read()
+  else:
+    return 'File not found'
 
 @app.route('/register', methods=['GET'])
 def register():
