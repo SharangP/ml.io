@@ -22,17 +22,17 @@ class MLTask(Task):
         self._schema, self._data, self._test = ({},) * 3
         self._model = ''
         self._results = {'score': None}
-        set_schema(schema)
-        set_model(model)
-        set_data(data)
-        set_test(test)
+        self.set_schema(schema)
+        self.set_model(model)
+        self.set_data(data)
+        self.set_test(test)
 
     def run(self):
         self.train_model()
-        if len(self._test['features']) > 0:
-            self._results['score'] = self._model.score(self._test['features'])
-        elif self._schema['cross_validation']:
-            pass
+        if self._test:
+            self._results['score'] = self._model.score(self._test['features'], self._test['targets'])
+        else:
+            self._results['score'] = 'yay'
 
     def results(self):
         return self._results['score']
@@ -51,8 +51,11 @@ class MLTask(Task):
         self._data['targets'] = np.array([]) if len(d['targets']) == 0 else d['targets']
 
     def set_test(self, d):
-        self._test['features'] = np.array([]) if len(d['features']) == 0 else d['features']
-        self._test['targets'] = np.array([]) if len(d['targets']) == 0 else d['targets']
+        if d:
+            self._test['features'] = np.array([]) if len(d['features']) == 0 else d['features']
+            self._test['targets'] = np.array([]) if len(d['targets']) == 0 else d['targets']
+        else:
+            self._test = None
 
     def train_model(self):
         self._model.fit(self._data['features'], self._data['targets'])
