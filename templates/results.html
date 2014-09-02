@@ -24,8 +24,12 @@ noobML.io Results
         </div>
         {% else %}
         <h3>Classifier Performance</h3>
-        Score: 100
+        {{ ctx.results }}
         {% endif %}
+
+        <div class="spacer"></div>
+
+        <a href="{{url_for('files', uuid=ctx.uuid)}}">View uploaded file</a>
       </div>
     </div>
   </div>

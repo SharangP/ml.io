@@ -60,3 +60,6 @@ venv
 
 # Uploaded data
 uploads/*
+
+# Test data
+test*.json
