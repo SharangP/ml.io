@@ -10,7 +10,7 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, Rol
 from flask.ext.security.signals import user_registered
 
 from ml.utils import parse_data
-from ml.Task import MLTask
+from ml.MLTask import MLTask
 
 ################################################################################
 # Config
