@@ -18,7 +18,7 @@ CLASSIFIERS = {
             'required_params' : ['max_depth', 'n_estimators', 'max_features']
             },
         'AdaBoost Classifier' : {
-            'class' : ensemble.AdaBoostClassifier,
+            'class' : sklearn.ensemble.AdaBoostClassifier,
             'required_params' : []
             },
         'Gaussian Naive Bayes' : {
