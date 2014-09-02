@@ -9,6 +9,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, roles_required, current_user
 from flask.ext.security.signals import user_registered
 
+from ml.utils import parse_data
+from ml.Task import MLTask
+
 ################################################################################
 # Config
 ################################################################################
@@ -65,9 +68,11 @@ class User(db.Model, UserMixin):
   def is_admin(self):
     return self.has_role("admin")
 
-class Item(db.Model):
-  id = db.Column(db.Integer(), primary_key = True)
-  name = db.Column(db.String(30), nullable=False)
+#TODO store results betterer
+class Run(db.Model):
+  uuid = db.Column(db.String(36), primary_key = True)
+  pending = db.Column(db.Boolean(), nullable=False)
+  results = db.Column(db.Text(), nullable=False)
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
@@ -96,12 +101,37 @@ def submit():
   if datafile:
     filename = str(uuid.uuid4())
     datafile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    run = Run(uuid=filename, pending=True, results='')
+    db.session.add(run)
+    db.session.commit()
     return redirect('/results/%s' % filename)
   return redirect('/')
 
 @app.route('/results/<uuid>')
 def results(uuid):
-  context = { 'uuid': uuid, 'pending': True }
+  run = Run.query.filter_by(uuid=uuid).first()
+
+  if not run:
+    return redirect('/')
+
+  if run.pending:
+    #TODO background this
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], uuid)
+    contents = file(filepath).read()
+    data = parse_data(json.loads(contents))
+    task = MLTask({}, {}, data, test=data)
+    task.run()
+    results = task.results()
+
+    run.pending = False
+    run.results = json.dumps(results)
+
+    db.session.add(run)
+    db.session.commit()
+  else:
+    results = json.loads(run.results)
+
+  context = { 'uuid': uuid, 'pending': False, 'results': results }
   return render_template('results.html', ctx=context)
 
 @app.route('/files/<uuid>')
