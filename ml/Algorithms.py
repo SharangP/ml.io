@@ -1,48 +1,50 @@
+import sklearn
+
 CLASSIFIERS = {
         'Support Vector Machine' : {
-            'class' : 'SVC',
+            'class' : sklearn.svm.SVC, 
             'required_params' : ['kernel', 'C']
             },
         'K Neighbors Classifier' : {
-            'class' : 'KNeighborsClassifier',
+            'class' : sklearn.neighbors.KNeighborsClassifier,
             'required_params' : ['k']
             },
         'Decision Tree Classifier' : {
-            'class' : 'DecisionTreeClassifier',
+            'class' : sklearn.tree.DecisionTreeClassifier,
             'required_params' : ['max_depth']
             },
         'Random Forest Classifier' : {
-            'class' : 'RandomForestClassifier',
+            'class' : sklearn.ensemble.RandomForestClassifier,
             'required_params' : ['max_depth', 'n_estimators', 'max_features']
             },
         'AdaBoost Classifier' : {
-            'class' : 'AdaBoostClassifier',
+            'class' : ensemble.AdaBoostClassifier,
             'required_params' : []
             },
         'Gaussian Naive Bayes' : {
-            'class' : 'GaussianNB',
+            'class' : sklearn.naive_bayes.GaussianNB,
             'required_params' : []
             },
         'Linear Discriminant' : {
-            'class' : 'LDA',
+            'class' : sklearn.lda.LDA,
             'required_params' : []
             },
         'Quadratic Discriminant' : {
-            'class' : 'QDA',
+            'class' : sklearn.qda.QDA,
             'required_params' : []
             },
         }
 
 CLUSTERING = {
         'K Means' : {
-            'class' : 'KMeans',
+            'class' : sklearn.cluster.KMeans,
             'required_params' : ['k']
             }
         }
 
 REGRESSION = {
         'Linear Regression' : {
-            'class' : 'LinearRegression',
+            'class' : sklearn.linear_model.LinearRegression,
             'required_params' : []
             }
         }

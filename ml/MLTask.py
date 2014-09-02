@@ -1,9 +1,13 @@
 import numpy as np
 from sklearn import linear_model, cross_validation
 from Task import Task
+from Algorithms import *
+
 
 class MLTask(Task):
-
+    '''
+    Object to encapsulate Machine Learning
+    '''
     def __init__(self, schema={}, model={}, data={}, test={}):
         self._schema, self._data, self._test = ({},) * 3
         self._model = ''
@@ -34,6 +38,9 @@ class MLTask(Task):
         self._schema['cross_validation_test_size'] = 0.4 if not s.has_key('cross_validation_test_size') else s['cross_validation_test_size']
 
     def set_model(self, m):
+        '''
+        Set ML model based on input dict and Algorithms available
+        '''
         self._model = linear_model.LinearRegression()
 
     def set_data(self, d):
