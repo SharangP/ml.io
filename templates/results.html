@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+noobML.io Results
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="text-center">
+    <h1>Results</h1>
+  </div>
+</div>
+
+<div class="row jumbotron">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {% if ctx.pending %}
+        <h3>Running classifier...</h3>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped active" style="width: 100%">
+          </div>
+        </div>
+        {% else %}
+        <h3>Classifier Performance</h3>
+        Score: 100
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+{% endblock %}
