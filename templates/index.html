@@ -5,8 +5,15 @@ noobML.io
 {% endblock %}
 
 {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap-select/css/bootstrap-select.min.css')}}"/>
+<script type="text/javascript" src="{{url_for('static', filename='vendor/bootstrap-select/js/bootstrap-select.min.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
 <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}"/>
+
+<script type="text/javascript">
+  var methods = {{ ctx.methods|js }};
+  var types = {{ ctx.types|js }};
+</script>
 {% endblock %}
 
 {% block content %}
@@ -24,10 +31,23 @@ noobML.io
         <form action="/submit" method="post" name="submit-task" enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-4">
-              <h4>Classifier:</h4>
+              <h4>Method:</h4>
             </div>
             <div class="col-md-8">
-              <span class="label label-default">{{ ctx.classifier }}</span>
+              <select class="method" name="method">
+              </select>
+            </div>
+          </div>
+          <div class="row type-select">
+            <div class="col-md-4">
+              <h4>Type:</h4>
+            </div>
+            <div class="col-md-8">
+              <select class="type" name="type">
+                {% for type in ctx.types %}
+                <option>{{ type }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="row">

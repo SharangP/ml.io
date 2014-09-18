@@ -48,3 +48,6 @@ METHODS = {
         }
     }
 }
+
+METHOD_NAMES = METHODS.keys()
+TYPE_NAMES = {method: types.keys() for method, types in METHODS.items()}

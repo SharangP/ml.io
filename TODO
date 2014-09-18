@@ -1,5 +1,8 @@
 [ ] async tasks
-[ ] support multiple classifiers
+[.] support multiple classifiers
+  [x] classifier
+  [x] regression
+  [ ] clustering
 [ ] validate data
 [ ] k fold validation
 [ ] async results page

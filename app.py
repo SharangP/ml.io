@@ -2,13 +2,14 @@ import os
 import json
 import uuid
 
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, Markup
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, current_user
 from flask.ext.security.signals import user_registered
 
 from ml.utils import parse_data
 from ml.MLTask import MLTask
+from ml.Algorithms import METHOD_NAMES, TYPE_NAMES
 
 ###############################################################################
 # Config
@@ -32,6 +33,7 @@ app.config['SECURITY_CHANGEABLE'] = True
 
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+app.jinja_env.filters['js'] = lambda v: Markup(json.dumps(v))
 
 # Fake emails for now
 class FakeMail(object):
@@ -71,6 +73,8 @@ class User(db.Model, UserMixin):
 class Run(db.Model):
     uuid = db.Column(db.String(36), primary_key = True)
     pending = db.Column(db.Boolean(), nullable=False)
+    method = db.Column(db.String(64), nullable=False)
+    type = db.Column(db.String(64), nullable=False)
     results = db.Column(db.Text(), nullable=False)
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
@@ -89,19 +93,23 @@ def user_registered_sighandler(app, user, confirm_token):
 @app.route('/')
 def index():
     if not current_user.is_authenticated():
-        context = {}
+        context = {
+            'methods': METHOD_NAMES,
+            'types': TYPE_NAMES
+        }
         return render_template('index.html', ctx=context)
     else:
         return redirect('/dashboard')
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    import ipdb; ipdb.set_trace()
     datafile = request.files['datafile']
+    method = request.values['method']
+    type = request.values['type']
     if datafile:
         filename = str(uuid.uuid4())
         datafile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        run = Run(uuid=filename, pending=True, results='')
+        run = Run(uuid=filename, pending=True, method=method, type=type, results='')
         db.session.add(run)
         db.session.commit()
         return redirect('/results/%s' % filename)
@@ -119,7 +127,7 @@ def results(uuid):
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uuid)
         contents = file(filepath).read()
         data = parse_data(json.loads(contents))
-        task = MLTask({}, {}, data, test=data)
+        task = MLTask([run.method, run.type], data, test=data)
         task.run()
         results = task.results()
 
