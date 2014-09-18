@@ -1,0 +1,8 @@
+[ ] async tasks
+[ ] support multiple classifiers
+[ ] validate data
+[ ] k fold validation
+[ ] async results page
+[ ] add more task output
+[ ] refactor task queue implementation
+[ ] allow user to see previous results
