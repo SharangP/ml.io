@@ -6,3 +6,4 @@
 [ ] add more task output
 [ ] refactor task queue implementation
 [ ] allow user to see previous results
+[ ] support additional classifier parameters
