@@ -8,8 +8,8 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, Rol
 from flask.ext.security.signals import user_registered
 
 from ml.utils import parse_data
-from ml.MLTask import MLTask
-from ml.Algorithms import METHOD_NAMES, TYPE_NAMES
+from ml.mltask import MLTask
+from ml.algorithms import METHOD_NAMES, TYPE_NAMES
 
 ###############################################################################
 # Config

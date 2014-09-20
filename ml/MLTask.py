@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn import linear_model, cross_validation
 from Task import Task
-from Algorithms import METHODS
+from algorithms import METHODS
 
 
 class MLTask(Task):

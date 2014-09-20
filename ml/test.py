@@ -1,6 +1,6 @@
 from sklearn.datasets import load_iris
 from MLTask import MLTask
-from Algorithms import METHODS
+from algorithms import METHODS
 
 d = load_iris()
 data = {}
