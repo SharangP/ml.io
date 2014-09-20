@@ -8,6 +8,7 @@ data['features'] = d.data
 data['targets'] = d.target
 meta_data = {
         'cross_validation_test_size': 0.5,
+        'cross_validation_iterations': 10,
         'cross_validation_run': True,
         'test_run': False}
 for method in METHODS:

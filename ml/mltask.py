@@ -78,11 +78,10 @@ class MLTask(Task):
             self._test['targets'] = np.array([]) if len(d['targets']) == 0 else d['targets']
             
     def _cross_validate(self):
-        X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(
-                self._data['features'], self._data['targets'],
-                test_size=self._meta_data['cross_validation_size'])
-        self._model.fit(X_train, Y_train)
-        self._results['cross_validation_score'] = self._model.score(X_test, Y_test)
+        scores = cross_validation.cross_val_score(
+                self._model, self._data['features'], self._data['targets'],
+                cv=self._meta_data['cross_validation_iterations'])
+        self._results['score'] = np.mean(scores)
             
     def _test(self):
         self._model.fit(self._data['features'], self._data['targets'])
