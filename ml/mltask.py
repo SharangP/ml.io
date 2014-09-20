@@ -3,6 +3,36 @@ from sklearn import linear_model, cross_validation
 from task import Task
 from algorithms import METHODS
 
+METADATA = {
+        'desc': {
+            'type': 'text',
+            'default': None
+            },
+        'feature_names': {
+            'type': 'list',
+            'default': None
+            },
+        'target_names': {
+            'type': 'list',
+            'default': None
+            },
+        'cross_validation_run': {
+            'type': 'bool',
+            'default': False
+            },
+        'test_run': {
+            'type': 'bool',
+            'default': False
+            },
+        'cross_validation_iterations': {
+            'type': 'int',
+            'default': 10
+            },
+        'cross_validation_size': {
+            'type': 'float',
+            'default': 0.2
+            },
+        }
 
 class MLTask(Task):
     '''
@@ -27,12 +57,8 @@ class MLTask(Task):
         return self._results['score']
 
     def _set_meta_data(self, s):
-        self._meta_data['desc'] = None if not s.has_key('desc') else s['desc']
-        self._meta_data['feature_names'] = None if not s.has_key('feature_names') else s['feature_names']
-        self._meta_data['target_names'] = None if not s.has_key('target_names') else s['target_names']
-        self._meta_data['cross_validation_run'] = False if not s.has_key('cross_validation_run') else s['cross_validation_run']
-        self._meta_data['test_run'] = False if not s.has_key('test_run') else s['test_run']
-        self._meta_data['cross_validation_test_size'] = 0.4 if not s.has_key('cross_validation_test_size') else s['cross_validation_test_size']
+        for key, value in METADATA.items():
+            self._meta_data[key] = value['default'] if not s.has_key(key) else s[key]
 
     def _set_model(self, m):
         '''
@@ -54,7 +80,7 @@ class MLTask(Task):
     def _cross_validate(self):
         X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(
                 self._data['features'], self._data['targets'],
-                test_size=self._meta_data['cross_validation_test_size'])
+                test_size=self._meta_data['cross_validation_size'])
         self._model.fit(X_train, Y_train)
         self._results['cross_validation_score'] = self._model.score(X_test, Y_test)
             
