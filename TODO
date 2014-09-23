@@ -1,13 +1,15 @@
-[ ] async tasks
 [.] support multiple classifiers
   [x] classifier
   [x] regression
   [ ] clustering
+[ ] add more task output
 [ ] validate data
 [ ] k fold validation
-[ ] async results page
-[ ] add more task output
+[ ] support additional classifier parameters
+
+[ ] allow user to see previous results
+
 [ ] add built in datasets
 [ ] refactor task queue implementation
-[ ] allow user to see previous results
-[ ] support additional classifier parameters
+[ ] async tasks
+[ ] async results page
